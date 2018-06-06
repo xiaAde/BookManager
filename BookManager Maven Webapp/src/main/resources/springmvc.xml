@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/tx
+						http://www.springframework.org/schema/tx/spring-tx.xsd
+						http://www.springframework.org/schema/aop 
+						http://www.springframework.org/schema/aop/spring-aop.xsd
+  						http://www.springframework.org/schema/context   
+   						http://www.springframework.org/schema/context/spring-context.xsd
+   						http://www.springframework.org/schema/mvc
+   						http://www.springframework.org/schema/mvc/spring-mvc.xsd" >
+	
+	<!-- 自动注册DefaultAnnotationHandlerMapping与AnnotationMethodHandlerAdapter
+	 两个bean,是spring MVC为@Controllers分发请求所必须的，即解决了@Controller注解使用的前提配置 -->
+	 
+	<mvc:annotation-driven />
+	
+	<context:component-scan base-package="com.hone.BookManager" />
+	
+	<!-- 配置文件视图信息 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+		p:prefix="/WEB-INF/jsp/" p:suffix=".jsp">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+	</bean>
+
+	<!-- 文件上传相关 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="104857600" />
+		<property name="maxInMemorySize" value="4096" />
+		<property name="defaultEncoding" value="UTF-8"></property>
+	</bean>
+
+
+	<!-- 声明DispatcherServlet不要拦截下面声明的目录 -->
+	<mvc:resources location="/resource/" mapping="/resource/**" />
+	<mvc:resources location="/css/" mapping="/css/**" />
+	<mvc:resources location="/img/" mapping="/img/**" />
+	<mvc:resources location="/image/" mapping="/image/**" />
+	<mvc:resources location="/js/" mapping="/js/**" />
+	  
+</beans>  

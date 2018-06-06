@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hone.BookManager.dao.UserMapper">
+  <resultMap id="BaseResultMap" type="com.hone.BookManager.database.User">
+    <id column="uid" jdbcType="BIGINT" property="uid" />
+    <result column="loginname" jdbcType="VARCHAR" property="loginname" />
+    <result column="realname" jdbcType="VARCHAR" property="realname" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="cellphone" jdbcType="VARCHAR" property="cellphone" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="dbstate" jdbcType="VARCHAR" property="dbstate" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="lasttime" jdbcType="TIMESTAMP" property="lasttime" />
+    <result column="lastuid" jdbcType="BIGINT" property="lastuid" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    uid, loginname, realname, password, cellphone, email, dbstate,createtime,lasttime,lastuid
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where uid = #{uid,jdbcType=BIGINT}
+  </select>
+  
+   <select id="selectByLoginname" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where loginname = #{loginname,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByEmail" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where email = #{loginname,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByLoingnameOrEmail"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where email = #{email,jdbcType=VARCHAR} or loginname = #{loginname,jdbcType=VARCHAR} limit 1
+  </select>
+ <!--  <select id="selectDetailByUid" parameterType="java.lang.Long" resultMap="UIResultMap">
+    select a.uid, a.loginname, a.realname, a.password, a.cellphone, a.email,a.createtime,a.lasttime,a.lastuid,b.realname as lastoper
+    from sys_user a left join sys_user b on b.uid=a.lastuid
+     where a.uid = #{uid,jdbcType=BIGINT} 
+  </select>
+   <select id="queryUserByCondition"  resultMap="UIResultMap">
+    select t.uid, t.loginname, t.realname, t.password, t.cellphone, 
+    t.email,t.createtime,t.lasttime,t.lastuid from user t
+     where t.uid in
+    (
+    select distinct a.uid 
+    from sys_user a 
+    inner join sys_user_department b on a.uid=b.userid
+    <if test="rid == 5" >
+    	inner join sys_expert_awardtype c on a.uid=c.uid
+    </if>
+    inner join sys_user_award d on a.uid=d.uid where b.departid!=1
+    
+        <if test="aid != null" >
+			and d.aid = #{aid,jdbcType=INTEGER} and d.atid=0 and d.rid=#{rid,jdbcType=INTEGER}
+	    </if>
+		<if test="realname != null" >
+			and a.realname like #{realname,jdbcType=VARCHAR}
+	    </if>
+        <if test="atid != null" >
+			and c.atid =#{atid,jdbcType=INTEGER}
+	    </if>
+	    <if test="depid != null" >
+			and b.departid =#{depid,jdbcType=INTEGER}
+	    </if>
+ 
+  	)
+  </select> -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from user
+    where uid = #{uid,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hone.BookManager.database.User" useGeneratedKeys="true" keyProperty="uid">
+    insert into user (uid, loginname, realname, 
+      password, cellphone, email, 
+      dbstate,createtime,lasttime,lastuid)
+    values (#{uid,jdbcType=BIGINT}, #{loginname,jdbcType=VARCHAR}, #{realname,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{cellphone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+       #{dbstate,jdbcType=VARCHAR},#{createtime,jdbcType=TIMESTAMP}, 
+      #{lasttime,jdbcType=TIMESTAMP}, #{lastuid,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hone.BookManager.database.User" useGeneratedKeys="true" keyProperty="uid">
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="uid != null">
+        uid,
+      </if>
+      <if test="loginname != null">
+        loginname,
+      </if>
+      <if test="realname != null">
+        realname,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="cellphone != null">
+        cellphone,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="dbstate != null">
+        dbstate,
+      </if>
+      <if test="createtime != null">
+        createtime,
+      </if>
+      <if test="lasttime != null">
+        lasttime,
+      </if>
+      <if test="lastuid != null">
+        lastuid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="uid != null">
+        #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="loginname != null">
+        #{loginname,jdbcType=VARCHAR},
+      </if>
+      <if test="realname != null">
+        #{realname,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="cellphone != null">
+        #{cellphone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="dbstate != null">
+        #{dbstate,jdbcType=VARCHAR},
+      </if>
+       <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lasttime != null">
+        #{lasttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastuid != null">
+        #{lastuid,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hone.BookManager.database.User">
+    update user
+    <set>
+      <if test="loginname != null">
+        loginname = #{loginname,jdbcType=VARCHAR},
+      </if>
+      <if test="realname != null">
+        realname = #{realname,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="cellphone != null">
+        cellphone = #{cellphone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="dbstate != null">
+        dbstate = #{dbstate,jdbcType=VARCHAR},
+      </if>
+       <if test="createtime != null">
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lasttime != null">
+        lasttime = #{lasttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastuid != null">
+        lastuid = #{lastuid,jdbcType=BIGINT},
+      </if>
+    </set>
+    where uid = #{uid,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hone.BookManager.database.User">
+    update user
+    set loginname = #{loginname,jdbcType=VARCHAR},
+      realname = #{realname,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      cellphone = #{cellphone,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      lasttime = #{lasttime,jdbcType=TIMESTAMP},
+      lastuid = #{lastuid,jdbcType=BIGINT},
+      dbstate = #{dbstate,jdbcType=VARCHAR}
+    where uid = #{uid,jdbcType=BIGINT}
+  </update>
+</mapper>
